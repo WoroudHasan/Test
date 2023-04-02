@@ -1,0 +1,151 @@
+class Course:
+    course_id = 1
+
+    def __init__(self, course_name, course_level):
+        self.course_name = course_name
+        self.course_level = course_level.upper()
+        self.course_id = Course.course_id
+        Course.course_id += 1
+
+
+class Student:
+    student_id = 1
+
+    def __init__(self, student_name, student_level):
+        self.student_name = student_name
+        self.student_level = student_level.upper()
+        self.student_id = Student.student_id
+        self.student_courses = []
+        Student.student_id += 1
+
+    def add_course(self, course):
+        if self.student_level == course.course_level:
+            self.student_courses.append(course)
+            print(f"{course.course_name} added to {self.student_name}'s courses")
+        else:
+            print(
+                f"{course.course_name} could not be added to {self.student_name}'s courses. Course level does not match with the student's level.")
+
+
+    def display_details(self):
+        print(f"Student ID: {self.student_id}")
+        print(f"Name: {self.student_name}")
+        print(f"Level: {self.student_level}")
+        print("Courses enrolled:")
+        for course in self.student_courses:
+            print(f"{course.course_name} ({course.course_level}), Course ID: {course.course_id}")
+
+
+students = []
+courses = []
+
+while True:
+    print("\nStudent Course Management System Menu:")
+    print("1. Add New Student")
+    print("2. Remove Student")
+    print("3. Edit Student")
+    print("4. Display all students")
+    print("5. Create new Course")
+    print("6. Add Course to student")
+    print("7. Display Student Details")
+    print("8. Exit")
+
+    choice = input("Enter your choice (1-8): ").lower()
+
+    if choice == '1':
+        name = input("Enter student name: ")
+        level = ''
+        while level.lower() not in ['a', 'b', 'c']:
+            level = input("Select class (A, B, C): ").upper()
+        student = Student(name, level)
+        students.append(student)
+        print("Student saved successfully")
+
+    elif choice == '2':
+        student_id = int(input("Enter the student's id: "))
+        for student in students:
+            if student.student_id == student_id:
+                students.remove(student)
+                print("Delete done successfully")
+                break
+        else:
+            print("User does not exist")
+
+    elif choice == '3':
+        student_id = int(input("Enter the student's id: "))
+        for student in students:
+            if student.student_id == student_id:
+                name = input("Enter a new name: ")
+                level = ''
+                while level.lower() not in ['a', 'b', 'c']:
+                    level = input("Select new level (A, B, C): ").upper()
+                student.student_name = name
+                student.student_level = level
+                print("Edit done successfully")
+                break
+        else:
+            print("User does not exist")
+
+    elif choice == '4':
+        print("All students:")
+        for student in students:
+            print(f"Student ID: {student.student_id}, Name: {student.student_name}, Level: {student.student_level}")
+            if student.student_courses:
+                for course in student.student_courses:
+                    print(f" Course ID: {course.course_id}, Name: {course.course_name} ({course.course_level})")
+            else:
+                print(" No courses enrolled.")
+
+
+    elif choice == '5':
+        course_name = input("Enter course name: ")
+        course_level = ''
+        while course_level.lower() not in ['a', 'b', 'c']:
+            course_level = input("Select course level (A, B, C): ").upper()
+        course = Course(course_name, course_level)
+        courses.append(course)
+        print("Course created successfully")
+
+
+    elif choice == '6':
+        student_id = int(input("Enter the student's id: "))
+        course_id = int(input("Enter the course id: "))
+        selected_student = None
+        for student in students:
+            if student.student_id == student_id:
+                selected_student = student
+                break
+
+        else:
+            print("User does not exist")
+            continue
+        selected_course = None
+        for course in courses:
+            if course.course_id == course_id:
+                selected_course = course
+                break
+
+        else:
+            print("Course does not exist")
+            continue
+        selected_student.add_course(selected_course)
+
+
+    elif choice == '7':
+        student_id = int(input("Enter the student's id: "))
+        for student in students:
+            if student.student_id == student_id:
+                student.display_details()
+                break
+
+        else:
+            print("User does not exist")
+
+
+    elif choice == '8':
+        print("Thank you for using Student Course Management System.")
+        break
+
+
+    else:
+        print("Invalid choice. Please enter a number between 1-8.")
